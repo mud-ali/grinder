@@ -6,8 +6,8 @@ int val = 0;
 //pins for components
 const int sensor = 9;
 const int led = 13;
-const int GRINDER_PIN = 7
-const int PUSHER_PIN = 3
+const int GRINDER_PIN = 7;
+const int PUSHER_PIN = 3;
 
 //references to servos
 Servo pusher;
