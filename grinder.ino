@@ -1,22 +1,22 @@
 #include <Servo.h>
 
 // Sensor default value
-int val = 0;
+int val = LOW;
 
 //pins for components
 const int sensor = 9;
 const int led = 13;
-const int GRINDER_PIN = 7
-const int PUSHER_PIN = 3
+const int GRINDER_PIN = 7;
+const int PUSHER_PIN = 3;
 
 //references to servos
 Servo pusher;
 Servo grinder;
 
 //the following values are, ironically, subject to change
-const int PUSHER_MOVE_TIME = 1000;
+const int PUSHER_MOVE_TIME = 4000;
 const int GRIND_INCREMENT = 2000;
-const int GRIND_COUNT = 5;
+const int GRIND_COUNT = 3;
 
 void setup() {
     Serial.begin(9600);
@@ -24,14 +24,24 @@ void setup() {
     pinMode(sensor, INPUT);
     pusher.attach(PUSHER_PIN);
     grinder.attach(GRINDER_PIN);
+    pusher.write(92);
+    grinder.write(0);
 }
 
-void loop(){
+void loop() {
     val = digitalRead(sensor);
+    //Serial.println(val);
     //using LED for testing
     digitalWrite(led, val);
     
-    if (val == HIGH) {
+    if (val == 1) {
+      grind();
+      pusher.write(92);
+      grinder.write(0);
+    }
+}
+
+void grind() {
         //TODO: figure out timing function (or math it based on height of model)
         
         //start pushing
@@ -39,26 +49,21 @@ void loop(){
         delay(PUSHER_MOVE_TIME);
         
         //stop pushing
-        pusher.write(90);
+        pusher.write(92);
         Serial.println("pusher reached bottom");
         
         //start grinding
         for(int i=0;i<GRIND_COUNT;i++){
             //switch directions every turn 
-            grinder.write(i%2 == 0 ? 180: 0); 
+            grinder.write(i%2 == 0 ? 180: 90); 
             delay(GRIND_INCREMENT);
-            Serial.println("grinder grinded "+String(i)+" times");
+            Serial.println("grinder grinded "+ String(i) + " times");
         }
         
         //once grinding is done, bring pusher back up
         pusher.write(0);
         delay(PUSHER_MOVE_TIME);
-        pusher.write(90);
-        Serial.println("pusher reached top");        
-    } else {
-        //make sure pusher and grinder are in neutral position
-        pusher.write(90);
-        grinder.write(90);
-    }
-
+        pusher.write(92);
+        Serial.println("pusher reached top"); 
+        val = LOW;
 }
