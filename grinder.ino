@@ -13,7 +13,6 @@ const int PUSHER_PIN = 3;
 Servo pusher;
 Servo grinder;
 
-//the following values are, ironically, subject to change
 const int PUSHER_MOVE_TIME = 4000;
 const int GRIND_INCREMENT = 2000;
 const int GRIND_COUNT = 3;
@@ -30,7 +29,7 @@ void setup() {
 
 void loop() {
     val = digitalRead(sensor);
-    //Serial.println(val);
+    
     //using LED for testing
     digitalWrite(led, val);
     
@@ -42,7 +41,6 @@ void loop() {
 }
 
 void grind() {
-        //TODO: figure out timing function (or math it based on height of model)
         
         //start pushing
         pusher.write(180);//adjust speed
