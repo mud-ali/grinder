@@ -13,7 +13,7 @@ const int PUSHER_PIN = 3;
 Servo pusher;
 Servo grinder;
 
-const int PUSHER_MOVE_TIME = 4000;
+const int PUSHER_MOVE_TIME = 710;
 const int GRIND_INCREMENT = 2000;
 const int GRIND_COUNT = 3;
 
@@ -44,7 +44,7 @@ void grind() {
         
         //start pushing
         pusher.write(180);//adjust speed
-        delay(PUSHER_MOVE_TIME);
+        delay(PUSHER_MOVE_TIME-50);
         
         //stop pushing
         pusher.write(92);
@@ -60,7 +60,7 @@ void grind() {
         
         //once grinding is done, bring pusher back up
         pusher.write(0);
-        delay(PUSHER_MOVE_TIME);
+        delay(PUSHER_MOVE_TIME+50);
         pusher.write(92);
         Serial.println("pusher reached top"); 
         val = LOW;
