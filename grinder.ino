@@ -13,7 +13,7 @@ const int PUSHER_PIN = 3;
 Servo pusher;
 Servo grinder;
 
-const int PUSHER_MOVE_TIME = 710;
+const int PUSHER_MOVE_TIME = 660;
 const int GRIND_INCREMENT = 2000;
 const int GRIND_COUNT = 3;
 
@@ -30,7 +30,7 @@ void setup() {
 void loop() {
     val = digitalRead(sensor);
     
-    //using LED for testing
+    //using LED for debugging
     digitalWrite(led, val);
     
     if (val == 1) {
@@ -41,26 +41,27 @@ void loop() {
 }
 
 void grind() {
-        
         //start pushing
-        pusher.write(180);//adjust speed
-        delay(PUSHER_MOVE_TIME-50);
+        pusher.write(180);
+        delay(PUSHER_MOVE_TIME);
         
         //stop pushing
         pusher.write(92);
         Serial.println("pusher reached bottom");
         
         //start grinding
-        for(int i=0;i<GRIND_COUNT;i++){
+        for (int i=0;i<GRIND_COUNT;i++) {
             //switch directions every turn 
-            grinder.write(i%2 == 0 ? 180: 90); 
+            grinder.write(i % 2 == 0 ? 180: 90); 
             delay(GRIND_INCREMENT);
             Serial.println("grinder grinded "+ String(i) + " times");
         }
         
         //once grinding is done, bring pusher back up
         pusher.write(0);
-        delay(PUSHER_MOVE_TIME+50);
+
+        //working against friction + gravity, we need to turn the servo a little longer
+        delay(PUSHER_MOVE_TIME + 100);
         pusher.write(92);
         Serial.println("pusher reached top"); 
         val = LOW;
