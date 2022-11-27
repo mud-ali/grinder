@@ -29,40 +29,41 @@ void setup() {
 
 void loop() {
     val = digitalRead(sensor);
-    
+
     //using LED for debugging
     digitalWrite(led, val);
-    
+
     if (val == 1) {
-      grind();
-      pusher.write(92);
-      grinder.write(0);
+        grind();
+        pusher.write(92);
+        grinder.write(0);
     }
 }
 
 void grind() {
-        //start pushing
-        pusher.write(180);
-        delay(PUSHER_MOVE_TIME);
-        
-        //stop pushing
-        pusher.write(92);
-        Serial.println("pusher reached bottom");
-        
-        //start grinding
-        for (int i=0;i<GRIND_COUNT;i++) {
-            //switch directions every turn 
-            grinder.write(i % 2 == 0 ? 180: 90); 
-            delay(GRIND_INCREMENT);
-            Serial.println("grinder grinded "+ String(i) + " times");
-        }
-        
-        //once grinding is done, bring pusher back up
-        pusher.write(0);
+    //start pushing
+    pusher.write(180);
+    delay(PUSHER_MOVE_TIME);
+    
+    //stop pushing
+    pusher.write(92);
+    Serial.println("pusher reached bottom");
+    
+    //start grinding
+    for (int i=0;i<GRIND_COUNT;i++) {
+        //switch directions every turn 
+        grinder.write(i % 2 == 0 ? 180: 90); 
+        delay(GRIND_INCREMENT);
+        Serial.println("grinder grinded "+String(i)+" times");
+    }
+    
+    //once grinding is done, bring pusher back up
+    pusher.write(0);
 
-        //working against friction + gravity, we need to turn the servo a little longer
-        delay(PUSHER_MOVE_TIME + 100);
-        pusher.write(92);
-        Serial.println("pusher reached top"); 
-        val = LOW;
+    //working against friction + gravity
+    //so we need to turn the servo a little longer
+    delay(PUSHER_MOVE_TIME + 100);
+    pusher.write(92);
+    Serial.println("pusher reached top"); 
+    val = LOW;
 }
